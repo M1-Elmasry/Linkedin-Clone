@@ -29,12 +29,54 @@ class Router
     }
 
     $uri = parse_url($uri);
+    $path = $uri["path"];
+    $pathContent = explode('/', substr($path, 1));
     $route = null;
-
-    foreach ($this->routes as $routeItem) {
-      if($routeItem['uri'] == $uri["path"] && $routeItem['method'] == $method) {
-        $route = $routeItem;
-        break;
+    $params = [];
+    if(count($pathContent) > 1)
+    {
+      $pathContentCount = count($pathContent);
+      
+      foreach ($this->routes as $routeItem)
+      {
+        // skip the ones with diffrent method type from the start
+        if($routeItem['method'] != $method) {
+          continue;
+        }
+        
+        $checkedPath = "";
+        
+        for($i = 0; $i < $pathContentCount; $i++)
+        {
+          // if already fount the route, add to parametars
+          if($route != null) 
+          {
+            $params[] = $pathContent[$i];
+            continue;
+          }
+          
+          $checkedPath = $checkedPath . '/' . $pathContent[$i];
+          
+          if($checkedPath != $routeItem['uri'] || count($routeItem['params']) != $pathContentCount - $i - 1)
+          {
+            continue;
+          }
+          $route = $routeItem;
+        }
+        if($route != null) 
+        {
+          break;
+        }
+      }
+    }
+    else
+    {
+      foreach ($this->routes as $routeItem)
+      {
+        if($path == $routeItem['uri'] && $method == $routeItem['method'] && $routeItem['params'] == []) {
+          $route = $routeItem;
+          break;
+        }
       }
     }
 
@@ -45,7 +87,7 @@ class Router
     require base_path($route['controllerPath']);
     
     $controller = new $route['controllerName'];
-    $controller->{$route['action']}();
+    call_user_func_array(array($controller, $route['action']), $params);
   }
 
   // helpers
@@ -53,7 +95,9 @@ class Router
   {
     $controllerName = "";
     $actionName = "";
+    $param = [];
 
+    // separate controller name and function name
     if(str_contains($controller, ':'))
     {
       $controllerArray = explode(':', $controller);
@@ -66,12 +110,27 @@ class Router
       $actionName = 'Index';
     }
 
+    // extract parametars if any
+    if(str_contains($uri, '{'))
+    {
+      $paramArray = explode('{', $uri);
+      $uri = rtrim($paramArray[0], '/');
+      
+      for($i = 1; $i < count($paramArray); $i++)
+      {
+        $paramArray[$i] = rtrim($paramArray[$i], '/}');
+        $param[] = $paramArray[$i];
+      }
+    }
+
+    // cache the new route
     $this->routes[] = [
       'method' => $method,
       'uri' => $uri,
       'controllerName' => "\Controllers\\{$controllerName}Controller",
       'controllerPath' => "controllers/{$controllerName}Controller.php",
-      'action' => $actionName
+      'action' => $actionName,
+      'params' => $param
     ];
   }
 }

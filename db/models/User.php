@@ -1,9 +1,9 @@
 <?php
 namespace Models;
 
-use Core\Model;
+require base_path('Core\Model.php');
 
-class User extends Model
+class User extends \Core\Model
 {
   protected $table = "users";
   

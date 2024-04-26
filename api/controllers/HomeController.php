@@ -1,12 +1,17 @@
 <?php
 namespace Controllers;
 
+use \Models\User;
+
 class HomeController 
 {
   public function Index()
   {
-    $users = new \Models\User;
-
-    print_r($users->SelectAll());
+    $user = new User;
+    
+    print_r($user->Find(2));
+  }
+  public function Test($id, $data) {
+    echo $id . " and " . $data;
   }
 }
