@@ -8,6 +8,4 @@ spl_autoload_register(function($class) {
 
 $router = new \Core\Router;
 $routes = require("../routes.php");
-$router->HandleRequest($_SERVER["REQUEST_URI"], $_SERVER["REQUEST_METHOD"]);
-
-
+$router->HandleRequest($_SERVER["REQUEST_URI"], $_SERVER["REQUEST_METHOD"], $_REQUEST);

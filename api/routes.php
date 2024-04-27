@@ -5,3 +5,5 @@
 
 $router->get('/', 'Home');
 $router->get('/test/{id}/{data}', 'Home:Test');
+
+$router->post('/login', 'User:Login', ['email', 'password'])->only('Guest');

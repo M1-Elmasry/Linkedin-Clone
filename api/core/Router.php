@@ -9,19 +9,23 @@ class Router
   // method types (only needed ones)
   public function get($uri, $controllerName)
   {
-    $this->AddRoute($uri, $controllerName, 'GET');
+    return $this->AddRoute($uri, $controllerName, 'GET');
   }
-  public function post($uri, $controllerName)
+  public function post($uri, $controllerName, $params)
   {
-    $this->AddRoute($uri, $controllerName, 'POST');
+    return $this->AddRoute($uri, $controllerName, 'POST', $params);
   }
   public function delete($uri, $controllerName)
   {
-    $this->AddRoute($uri, $controllerName, 'DELETE');
+    return $this->AddRoute($uri, $controllerName, 'DELETE');
   }
 
+  public function only($middleware)
+  {
+    $this->routes[array_key_last($this->routes)]['middleware'] = $middleware;
+  }
   // handle and validate incoming requests
-  public function HandleRequest($uri, $method)
+  public function HandleRequest($uri, $method, $params)
   {
     if(count($this->routes) == 0)
     {
@@ -32,7 +36,7 @@ class Router
     $path = $uri["path"];
     $pathContent = explode('/', substr($path, 1));
     $route = null;
-    $params = [];
+
     if(count($pathContent) > 1)
     {
       $pathContentCount = count($pathContent);
@@ -73,15 +77,28 @@ class Router
     {
       foreach ($this->routes as $routeItem)
       {
-        if($path == $routeItem['uri'] && $method == $routeItem['method'] && $routeItem['params'] == []) {
+        if($path == $routeItem['uri'] && $method == $routeItem['method'] && count($routeItem['params']) == count($params)) {
           $route = $routeItem;
           break;
         }
       }
     }
 
-    if($route == null) {
+    if($route == null)
+    {
+      echo "here";
       return abort();
+    }
+
+    if($route['middleware'] != null)
+    {
+      $middlewareClassName = '\Middlewares\\' . $route['middleware'];
+      $middleware = new $middlewareClassName;
+      if(!$middleware->Verify())
+      {
+        $middleware->OnReject();
+      }
+      $middleware->OnApprove();
     }
 
     require base_path($route['controllerPath']);
@@ -91,12 +108,10 @@ class Router
   }
 
   // helpers
-  private function AddRoute($uri, $controller, $method)
+  private function AddRoute($uri, $controller, $method, $params = [])
   {
     $controllerName = "";
     $actionName = "";
-    $param = [];
-
     // separate controller name and function name
     if(str_contains($controller, ':'))
     {
@@ -119,7 +134,7 @@ class Router
       for($i = 1; $i < count($paramArray); $i++)
       {
         $paramArray[$i] = rtrim($paramArray[$i], '/}');
-        $param[] = $paramArray[$i];
+        $params[] = $paramArray[$i];
       }
     }
 
@@ -130,7 +145,10 @@ class Router
       'controllerName' => "\Controllers\\{$controllerName}Controller",
       'controllerPath' => "controllers/{$controllerName}Controller.php",
       'action' => $actionName,
-      'params' => $param
+      'params' => $params,
+      'middleware' => null
     ];
+
+    return $this;
   }
 }
