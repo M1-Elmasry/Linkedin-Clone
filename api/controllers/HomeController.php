@@ -1,12 +1,13 @@
 <?php
-namespace Controllers;
+namespace API\Controllers;
 
 class HomeController 
 {
   public function Index()
   {
-    $users = new \Models\User;
+    //$users = new \Models\User;
 
-    print_r($users->SelectAll());
+    //print_r($users->SelectAll());
+    echo "home index";
   }
 }
