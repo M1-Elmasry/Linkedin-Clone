@@ -1,14 +1,14 @@
 <?php
-namespace Core;
+namespace Database;
 // Database Singleton Class
-class Database
+class DBConnection
 {
   private $dbh = null;
   private static $instance = null;
 
   private function __construct()
   {
-    $config = require(base_path('config.php'));
+    $config = require(base_path('api/config.php'));
 
     $dsn = "mysql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};charset={$config['DB_CHARSET']}";
 
@@ -18,7 +18,7 @@ class Database
   {
     if (self::$instance == null)
     {
-      self::$instance = new Database();
+      self::$instance = new DBConnection();
     }
     return self::$instance->dbh;
   }

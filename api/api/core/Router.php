@@ -1,5 +1,7 @@
 <?php
-namespace Core;
+namespace API\Core;
+
+use \API\Core\Middleware;
 
 class Router
 {
@@ -11,7 +13,7 @@ class Router
   {
     return $this->AddRoute($uri, $controllerName, 'GET');
   }
-  public function post($uri, $controllerName, $params)
+  public function post($uri, $controllerName, $params = [])
   {
     return $this->AddRoute($uri, $controllerName, 'POST', $params);
   }
@@ -86,19 +88,12 @@ class Router
 
     if($route == null)
     {
-      echo "here";
       return abort();
     }
 
     if($route['middleware'] != null)
     {
-      $middlewareClassName = '\Middlewares\\' . $route['middleware'];
-      $middleware = new $middlewareClassName;
-      if(!$middleware->Verify())
-      {
-        $middleware->OnReject();
-      }
-      $middleware->OnApprove();
+      Middleware::Resolve($route['middleware']);
     }
 
     require base_path($route['controllerPath']);
@@ -142,8 +137,8 @@ class Router
     $this->routes[] = [
       'method' => $method,
       'uri' => $uri,
-      'controllerName' => "\Controllers\\{$controllerName}Controller",
-      'controllerPath' => "controllers/{$controllerName}Controller.php",
+      'controllerName' => "\API\Controllers\\{$controllerName}Controller",
+      'controllerPath' => "\api\controllers/{$controllerName}Controller.php",
       'action' => $actionName,
       'params' => $params,
       'middleware' => null

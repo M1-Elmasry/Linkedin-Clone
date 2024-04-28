@@ -1,9 +1,7 @@
 <?php
-namespace Middlewares;
+namespace API\Middlewares;
 
-use \Core\Middleware;
-
-class Guest implements Middleware
+class Guest extends \API\Core\Middleware
 {
   public function Verify()
   {
@@ -12,7 +10,7 @@ class Guest implements Middleware
 
   public function OnApprove()
   {
-    echo 'middleware';
+    // nothing
   }
 
   public function OnReject()

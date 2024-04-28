@@ -1,7 +1,7 @@
 <?php
-namespace Controllers;
+namespace API\Controllers;
 
-use \Models\User;
+use \Database\Models\User;
 
 class HomeController 
 {
