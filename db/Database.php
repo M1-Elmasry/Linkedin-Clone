@@ -1,5 +1,7 @@
 <?php
-namespace Core;
+
+namespace DB;
+
 // Database Singleton Class
 class Database
 {
@@ -8,7 +10,7 @@ class Database
 
   private function __construct()
   {
-    $config = require(base_path('config.php'));
+    $config = require('config/database.php');
 
     $dsn = "mysql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};charset={$config['DB_CHARSET']}";
 
