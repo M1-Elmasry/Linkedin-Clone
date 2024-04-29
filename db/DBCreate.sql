@@ -14,16 +14,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   `current_company` varchar(50),
   `title` varchar(50),
   `about` text,
-  `is_recuirter` boolean NOT NULL,
+  `is_recruiter` boolean NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp
 );
 
 CREATE VIEW IF NOT EXISTS job_seekers AS
-	SELECT * FROM users WHERE is_recuirter = FALSE;
+	SELECT * FROM users WHERE is_recruiter = FALSE;
 
-CREATE VIEW IF NOT EXISTS recuirters AS
-	SELECT * FROM users WHERE is_recuirter = TRUE;
+CREATE VIEW IF NOT EXISTS recruiters AS
+	SELECT * FROM users WHERE is_recruiter = TRUE;
 
 CREATE TABLE IF NOT EXISTS `job_posts` (
   `id` uuid PRIMARY KEY,
