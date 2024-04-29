@@ -1,5 +1,8 @@
 <?php
-namespace Core;
+namespace API\Core;
+
+use utils\Utils;
+use \API\Core\Middleware;
 
 class Router
 {
@@ -9,51 +12,104 @@ class Router
   // method types (only needed ones)
   public function get($uri, $controllerName)
   {
-    $this->AddRoute($uri, $controllerName, 'GET');
+    return $this->AddRoute($uri, $controllerName, 'GET');
   }
-  public function post($uri, $controllerName)
+  public function post($uri, $controllerName, $params = [])
   {
-    $this->AddRoute($uri, $controllerName, 'POST');
+    return $this->AddRoute($uri, $controllerName, 'POST', $params);
   }
   public function delete($uri, $controllerName)
   {
-    $this->AddRoute($uri, $controllerName, 'DELETE');
+    return $this->AddRoute($uri, $controllerName, 'DELETE');
+  }
+
+  public function only($middleware)
+  {
+    $this->routes[array_key_last($this->routes)]['middleware'] = $middleware;
   }
 
   // handle and validate incoming requests
-  public function HandleRequest($uri, $method)
+  public function HandleRequest($uri, $method, $params)
   {
     if(count($this->routes) == 0)
     {
-      abort();
+      Utils::abort();
     }
 
     $uri = parse_url($uri);
+    $path = $uri["path"];
+    $pathContent = explode('/', substr($path, 1));
     $route = null;
 
-    foreach ($this->routes as $routeItem) {
-      if($routeItem['uri'] == $uri["path"] && $routeItem['method'] == $method) {
-        $route = $routeItem;
-        break;
+    if(count($pathContent) > 1)
+    {
+      $pathContentCount = count($pathContent);
+      
+      foreach ($this->routes as $routeItem)
+      {
+        // skip the ones with diffrent method type from the start
+        if($routeItem['method'] != $method) {
+          continue;
+        }
+        
+        $checkedPath = "";
+        
+        for($i = 0; $i < $pathContentCount; $i++)
+        {
+          // if already fount the route, add to parametars
+          if($route != null) 
+          {
+            $params[] = $pathContent[$i];
+            continue;
+          }
+          
+          $checkedPath = $checkedPath . '/' . $pathContent[$i];
+          
+          if($checkedPath != $routeItem['uri'] || count($routeItem['params']) != $pathContentCount - $i - 1)
+          {
+            continue;
+          }
+          $route = $routeItem;
+        }
+        if($route != null) 
+        {
+          break;
+        }
+      }
+    }
+    else
+    {
+      foreach ($this->routes as $routeItem)
+      {
+        if($path == $routeItem['uri'] && $method == $routeItem['method'] && count($routeItem['params']) == count($params)) {
+          $route = $routeItem;
+          break;
+        }
       }
     }
 
-    if($route == null) {
-      return abort();
+    if($route == null)
+    {
+      return Utils::abort();
     }
 
-    require base_path($route['controllerPath']);
+    if($route['middleware'] != null)
+    {
+      Middleware::Resolve($route['middleware']);
+    }
+
+    require Utils::base_path($route['controllerPath']);
     
     $controller = new $route['controllerName'];
-    $controller->{$route['action']}();
+    call_user_func_array(array($controller, $route['action']), $params);
   }
 
   // helpers
-  private function AddRoute($uri, $controller, $method)
+  private function AddRoute($uri, $controller, $method, $params = [])
   {
     $controllerName = "";
     $actionName = "";
-
+    // separate controller name and function name
     if(str_contains($controller, ':'))
     {
       $controllerArray = explode(':', $controller);
@@ -66,12 +122,30 @@ class Router
       $actionName = 'Index';
     }
 
+    // extract parametars if any
+    if(str_contains($uri, '{'))
+    {
+      $paramArray = explode('{', $uri);
+      $uri = rtrim($paramArray[0], '/');
+      
+      for($i = 1; $i < count($paramArray); $i++)
+      {
+        $paramArray[$i] = rtrim($paramArray[$i], '/}');
+        $params[] = $paramArray[$i];
+      }
+    }
+
+    // cache the new route
     $this->routes[] = [
       'method' => $method,
       'uri' => $uri,
-      'controllerName' => "\Controllers\\{$controllerName}Controller",
-      'controllerPath' => "controllers/{$controllerName}Controller.php",
-      'action' => $actionName
+      'controllerName' => "\API\Controllers\\{$controllerName}Controller",
+      'controllerPath' => "\api\controllers/{$controllerName}Controller.php",
+      'action' => $actionName,
+      'params' => $params,
+      'middleware' => null
     ];
+
+    return $this;
   }
 }
