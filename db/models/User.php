@@ -2,127 +2,117 @@
 
 namespace DB\Models;
 
+// require("db/Database.php");
+use DB\Database as Database;
 use UnexpectedValueException;
 
-abstract class User
+class User
 {
-    protected string $Fname;
-    protected string $Lname;
-    protected string $email;
-    protected string $pswd;
-    protected string $phone;
-    protected string $industry;
-    protected string $title;
-    protected string $currentCompany;
-    protected string $about;
-    protected $createdAt;
-    protected $updatedAt;
+    protected function __construct(
+        protected string $ImagePath,
+        protected string $Fname,
+        protected string $Lname,
+        protected string $email,
+        protected string $pswd,
+        protected string $phone,
+        protected string $industry,
+        protected string $title,
+        protected string $currentCompany,
+        protected string $about
+    ) {
+        $this->validateProperty("ImagePath", $ImagePath, 256, 1); // if no value insert '-'
+        $this->validateProperty("Fname", $Fname, 50, 2);
+        $this->validateProperty("Lname", $Lname, 50, 2);
+        $this->validateProperty("email", $email, 50, 2);
+        $this->validateProperty("pswd", $pswd, 256, 6);
+        $this->validateProperty("phone", $phone, 25, 7);
+        $this->validateProperty("industry", $industry, 50, 5);
+        $this->validateProperty("title", $title, 50, 5);
+        $this->validateProperty("currentCompany", $currentCompany, 50, 0);
+        $this->validateProperty("about", $about, 1024 * 1024, 0);
+    }
 
-    public function __construct(
+    protected function validateProperty(string $propName, string $propValue, int $maxLength, int $minLength)
+    {
+        if (!(!empty($propValue) && strlen($propValue) <= $maxLength && strlen($propValue) >= $minLength)) {
+            throw new UnexpectedValueException("$propName cannot be null and more than $maxLength char or less than $minLength");
+        }
+    }
+
+
+    public final static function authenticateUser(string $email, string $password): ?array
+    {
+        $result = Database::Query("SELECT * FROM users WHERE email = '$email' LIMIT 1")->fetch();
+
+        if (empty($result)) {
+            return null;
+        }
+
+        if ($password === $result['password']) {
+            return [
+                    'id' => $result['id'],
+                    'is_recruiter' => $result['is_recruiter']
+                    ];
+        }
+
+        return null;
+    }
+
+    // wrapper method for the child classes (Recruiter, JobSeeker)
+    protected function upImgPath(string $newImagePath, string $tableName, string $userId): string
+    {
+        $this->validateProperty("newImagePath", $newImagePath, 256, 1); // if no value insert '-'
+        $updateDate = date("Y-m-d H:i:s");
+        Database::Query("
+            UPDATE $tableName SET image = '$newImagePath', updated_at = '$updateDate' WHERE id = '$userId';
+        ");
+        return $updateDate;
+    }
+
+    // wrapper method for the child classes (Recruiter, JobSeeker)
+    protected function upPswd(string $newPswd, string $tableName, string $userId): string
+    {
+        $this->validateProperty("newPswd", $newPswd, 256, 6);
+        $updateDate = date("Y-m-d H:i:s");
+        Database::Query("
+            UPDATE $tableName SET image = '$newPswd', updated_at = '$updateDate' WHERE id = '$userId';
+        ");
+        return $updateDate;
+    }
+
+    // wrapper method for the child classes (Recruiter, JobSeeker)
+    protected function upData(
         string $Fname,
         string $Lname,
         string $email,
-        string $pswd,
         string $phone,
         string $industry,
         string $title,
         string $currentCompany,
-        string $about
+        string $about,
+        string $tableName,
+        string $userId
     ) {
-        $this->setFname($Fname);
-        $this->setLname($Lname);
-        $this->setEmail($email);
-        $this->setPass($pswd);
-        $this->setPhone($phone);
-        $this->setIndustry($industry);
-        $this->setTitle($title);
-        $this->setCurrentCompany($currentCompany);
-        $this->setAbout($about);
+        $this->validateProperty("Fname", $Fname, 50, 2);
+        $this->validateProperty("Lname", $Lname, 50, 2);
+        $this->validateProperty("email", $email, 50, 2);
+        $this->validateProperty("phone", $phone, 25, 7);
+        $this->validateProperty("industry", $industry, 50, 5);
+        $this->validateProperty("title", $title, 50, 5);
+        $this->validateProperty("currentCompany", $currentCompany, 50, 0);
+        $this->validateProperty("about", $about, 1024 * 1024, 0);
+
+        $updateDate = date("Y-m-d H:i:s");
+        Database::Query("
+        UPDATE $tableName SET first_name = '$Fname', last_name = '$Lname',
+        email = '$email', phone = '$phone', industry = '$industry', title = '$title',
+        current_company = '$currentCompany', about = '$about', updated_at = '$updateDate'
+        WHERE id = '$userId';
+        ");
+        return $updateDate;
     }
 
-
-
-    public function setFname($name): void
-    {
-        if (!empty($name) && strlen($name) <= 50) {
-            $this->Fname = $name;
-        } else {
-            throw new UnexpectedValueException('$name cannot be empty and more than 50 char');
-        }
-    }
-
-    public function setLname($name): void
-    {
-        if (!empty($name) && strlen($name) <= 50) {
-            $this->Lname = $name;
-        } else {
-            throw new UnexpectedValueException('$name cannot be empty and more than 50 char');
-        }
-    }
-
-    public function setEmail($email): void
-    {
-        if (!empty($email) && strlen($email) <= 100) {
-            $this->email = $email;
-        } else {
-            throw new UnexpectedValueException('$email cannot be empty and more than 100 char');
-        }
-    }
-
-    public function setPass($pass): void
-    {
-        if (!empty($pass) && strlen($pass) <= 256 && strlen($pass) >= 8) {
-            $this->pswd = $pass;
-        } else {
-            throw new UnexpectedValueException('$password cannot be empty and more than 256 chars or less than 8 chars');
-        }
-    }
-
-    public function setPhone($phone): void
-    {
-        if (!empty($phone) && strlen($phone) <= 25) {
-            $this->phone = $phone;
-        } else {
-            throw new UnexpectedValueException('$phone cannot be empty and more than 25 chars');
-        }
-    }
-
-    public function setIndustry($industry): void
-    {
-        if (!empty($industry) && strlen($industry) <= 50) {
-            $this->industry = $industry;
-        } else {
-            throw new UnexpectedValueException('$industry cannot be empty and more than 50 chars');
-        }
-    }
-
-    public function setTitle(string $title): void
-    {
-        if (!empty($title) && strlen($title) <= 100) {
-            $this->title = $title;
-        } else {
-            throw new UnexpectedValueException('$title cannot be empty and more than 100 chars');
-        }
-    }
-
-    public function setCurrentCompany(string $company): void
-    {
-        if (strlen($company) <= 100) {
-            $this->currentCompany = $company;
-        } else {
-            throw new UnexpectedValueException('$currentCompany cannot be more than 50 chars');
-        }
-    }
-
-    public function setAbout(string $about): void
-    {
-        if (!empty($about)) {
-            $this->about = $about;
-        } else {
-            throw new UnexpectedValueException('$about cannot be empty');
-        }
-    }
-
+    // wrapper method for the child classes (Recruiter, JobSeeker)
     protected function getData(): array
     {
         return [
