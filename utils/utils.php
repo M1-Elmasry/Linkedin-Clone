@@ -1,5 +1,8 @@
 <?php
+
 namespace utils;
+
+use UnexpectedValueException;
 
 class Utils
 {
@@ -23,5 +26,12 @@ class Utils
 
         return $uuid;
     }
+    public static function validateProperty(string $propName, string $propValue, int $maxLength, int $minLength): void
+    {
+        if (!(!empty($propValue) && strlen($propValue) <= $maxLength && strlen($propValue) >= $minLength)) {
+            throw new UnexpectedValueException("$propName cannot be null and more than $maxLength char or less than $minLength");
+        }
+    }
+
 
 }
