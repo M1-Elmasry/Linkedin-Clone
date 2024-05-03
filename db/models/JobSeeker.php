@@ -11,10 +11,6 @@ use utils\Utils as Utils;
 
 class JobSeeker extends User
 {
-    private $id;
-    private $createdAt;
-    private $updatedAt;
-
     public function __construct(
         string $imagePath,
         string $Fname,
@@ -44,27 +40,19 @@ class JobSeeker extends User
             $about
         );
 
-        if ($is_new) {
-            $this->id = Utils::generateUUID();
-            $this->createdAt = date("Y-m-d H:i:s");
-            $this->updatedAt = $this->createdAt;
+        $this->tableName = "job_seekers";
+        $this->isRecruiter = 0; // False
 
-            Database::Query("
-              INSERT INTO
-              job_seekers(id, image, first_name, last_name, email, phone, password,
-                    industry, current_company, title, about, is_recruiter, created_at, updated_at)
-              VALUES('$this->id', '$this->ImagePath', '$this->Fname', '$this->Lname', '$this->email', '$this->pswd',
-                     '$this->phone', '$this->industry', '$this->currentCompany', '$this->title', '$this->about', FALSE,
-                     '$this->createdAt', '$this->updatedAt');
-            ");
+        if ($is_new) {
+            $this->createNewRecord();
         } else {
-            $this->id = $id;
+            $this->userId = $id;
             $this->createdAt = $createdAt;
             $this->updatedAt = $updatedAt;
         }
     }
 
-    public static function getJobSeekerById(string $JobSeekerId): JobSeeker | null
+    public static function getJobSeekerById(string $JobSeekerId): ?JobSeeker
     {
         $record = Database::Query("SELECT * FROM job_seekers WHERE id = '$JobSeekerId' ")->fetch();
 
@@ -88,69 +76,5 @@ class JobSeeker extends User
             $record["created_at"],
             $record["updated_at"]
         );
-    }
-
-    public function getAllData(): array
-    {
-        return [
-          "id" => $this->id,
-          "imagePath" => $this->ImagePath,
-          ...$this->getData(),
-          "createdAt" => $this->createdAt,
-          "updatedAt" => $this->updatedAt
-        ];
-    }
-
-    public function updateImagePath(string $newImagePath)
-    {
-        $this->updatedAt = $this->upImgPath($newImagePath, "job_seekers", $this->id);
-        $this->ImagePath = $newImagePath;
-    }
-
-    public function updatePassword(string $newPassword)
-    {
-        $this->updatedAt = $this->upPswd($newPassword, "job_seekers", $this->id);
-        $this->pswd = $newPassword;
-    }
-
-    public function updateData(
-        string $Fname = null,
-        string $Lname = null,
-        string $email = null,
-        string $phone = null,
-        string $industry = null,
-        string $title = null,
-        string $currentCompany = null,
-        string $about = null,
-    ) {
-        $Fname = $Fname ?? $this->Fname;
-        $Lname = $Lname ?? $this->Lname;
-        $email = $email ?? $this->email;
-        $phone = $phone ?? $this->phone;
-        $industry = $industry ?? $this->industry;
-        $title = $title ?? $this->title;
-        $currentCompany = $currentCompany ?? $this->currentCompany;
-        $about = $about ?? $this->about;
-
-        $this->updatedAt = $this->upData(
-            $Fname,
-            $Lname,
-            $email,
-            $phone,
-            $industry,
-            $title,
-            $currentCompany,
-            $about,
-            "job_seekers",
-            $this->id
-        );
-        $this->Fname = $Fname;
-        $this->Lname = $Lname;
-        $this->email = $email;
-        $this->phone = $phone;
-        $this->industry = $industry;
-        $this->title = $title;
-        $this->currentCompany = $currentCompany;
-        $this->about = $about;
     }
 }
