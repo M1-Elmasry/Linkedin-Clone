@@ -63,16 +63,19 @@ abstract class User
 
 
 
-    public function authenticateUser(string $email, string $password): ?string
+    public static function authenticateUser(string $email, string $password): ?string
     {
-        $result = Database::Query("SELECT * FROM $this->tableName WHERE email = '$email' LIMIT 1")->fetch();
+        $result = Database::Query("SELECT * FROM users WHERE email = '$email' LIMIT 1")->fetch();
 
         if (empty($result)) {
             return null;
         }
 
         if ($password === $result['password']) {
-            return $result['id'];
+            return [
+              "userId" => $result['id'],
+              "isRecuirter" => $result['is_recruiter']
+            ];
         }
 
         return null;
@@ -154,5 +157,11 @@ abstract class User
             "createdAt" => $this->createdAt,
             "updatedAt" => $this->updatedAt
           ];
+    }
+
+    public function delete(): void
+    {
+        // also will delete any record on any table related with this record
+        Database::Query("DELETE FROM '$this->tableName' WHERE id = '$this->userId'");
     }
 }
