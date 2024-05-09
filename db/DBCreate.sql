@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `job_posts` (
   `description` text NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp,
-  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
+  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `reactions` (
@@ -44,8 +44,9 @@ CREATE TABLE IF NOT EXISTS `reactions` (
   `react_name` varchar(20) NOT NULL,
   `post_id` uuid NOT NULL,
   `author_id` uuid NOT NULL,
-  FOREIGN KEY (`post_id`) REFERENCES `job_posts` (`id`),
-  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
+  `created_at` timestamp NOT NULL,
+  FOREIGN KEY (`post_id`) REFERENCES `job_posts` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 
@@ -54,8 +55,10 @@ CREATE TABLE IF NOT EXISTS `applicants` (
   `job_post_id` uuid NOT NULL,
   `job_seeker_id` uuid NOT NULL,
   `cover_letter` text,
-  FOREIGN KEY (`job_post_id`) REFERENCES `job_posts` (`id`),
-  FOREIGN KEY (`job_seeker_id`) REFERENCES `users` (`id`)
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp,
+  FOREIGN KEY (`job_post_id`) REFERENCES `job_posts` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`job_seeker_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 
@@ -66,8 +69,8 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `author_id` uuid NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp,
-  FOREIGN KEY (`post_id`) REFERENCES `job_posts` (`id`),
-  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
+  FOREIGN KEY (`post_id`) REFERENCES `job_posts` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 
@@ -76,8 +79,10 @@ CREATE TABLE IF NOT EXISTS `replies` (
   `content` text NOT NULL,
   `comment_id` uuid NOT NULL,
   `author_id` uuid NOT NULL,
-  FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
-  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp,
+  FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 
@@ -89,20 +94,17 @@ CREATE TABLE IF NOT EXISTS `experiences` (
   `joining_date` date,
   `leaving_date` date,
   `author_id` uuid NOT NULL,
-  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
-);
-
-
-CREATE TABLE IF NOT EXISTS `skills` (
-  `id` uuid PRIMARY KEY,
-  `skill` varchar(50) NOT NULL
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp,
+  FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 -- bridge table
-CREATE TABLE IF NOT EXISTS `skills_users` (
+CREATE TABLE IF NOT EXISTS `skills` (
+  `id` uuid PRIMARY KEY,
   `user_id` uuid NOT NULL,
-  `skill_id` uuid NOT NULL,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  FOREIGN KEY (`skill_id`) REFERENCES `skills` (`id`)
+  `skill` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
-
