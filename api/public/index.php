@@ -1,4 +1,5 @@
 <?php
+session_start();
 // autoloader for requiring classes on initialize or call
 spl_autoload_register(function($class) {
   require "{$_SERVER['DOCUMENT_ROOT']}/{$class}.php";
