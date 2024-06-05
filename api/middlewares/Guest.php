@@ -1,13 +1,15 @@
 <?php
 namespace API\Middlewares;
 
-use \utils\Utils;
+use \API\Core\Authenticator;
+use \API\Core\Middleware;
+use \API\Core\Response;
 
-class Guest extends \API\Core\Middleware
+class Guest extends Middleware
 {
   public function Verify()
   {
-    return $_SESSION['user'] ?? true;
+    return !Authenticator::IsAuthenticated();
   }
 
   public function OnApprove()
@@ -17,6 +19,8 @@ class Guest extends \API\Core\Middleware
 
   public function OnReject()
   {
-    Utils::abort();
+    $res = new Response("user found logged in", false);
+    $res->send();
+    die();
   }
 }
