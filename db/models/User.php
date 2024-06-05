@@ -9,7 +9,7 @@ use UnexpectedValueException;
 
 class User
 {
-    protected static $tableName = 'users';
+    protected $tableName;
     protected $userId;
     protected $createdAt;
     protected $updatedAt;
@@ -20,12 +20,12 @@ class User
         protected string $email,
         protected string $pswd,
         protected bool $isRecruiter,
-        protected string $ImagePath = "-",
-        protected string $phone = "-",
-        protected string $industry = "-",
-        protected string $title = "-",
-        protected string $currentCompany = "-",
-        protected string $about = "-"
+        protected string $ImagePath,
+        protected string $phone,
+        protected string $industry,
+        protected string $title,
+        protected string $currentCompany,
+        protected string $about
     ) {
         $this->validateProperties();
         $this->isRecruiter = $isRecruiter;
@@ -46,12 +46,12 @@ class User
     }
 
 
-    public function createNewRecord()
+    protected function createNewRecord()
     {
         $this->userId = Utils::generateUUID();
         $this->createdAt = $this->updatedAt = date("Y-m-d H:i:s");
 
-        $stmt = "INSERT INTO " . self::$tableName . " (id, image, first_name, last_name, email, phone, password, industry, current_company, title, about, is_recruiter, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = "INSERT INTO {$this->tableName} (id, image, first_name, last_name, email, phone, password, industry, current_company, title, about, is_recruiter, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $params = [
             $this->userId,
@@ -174,9 +174,10 @@ class User
         Database::Query("DELETE FROM '$this->tableName' WHERE id = '$this->userId'");
     }
 
-    public static function checkEmailExist($email) : bool
+    public static function checkEmailExist($email, $isRecruiter) : bool
     {
-        $stmt = "SELECT * FROM " . self::$tableName . " WHERE email=?";
+        $table = $isRecruiter ? "recruiters" : "job_seekers";
+        $stmt = "SELECT * FROM {$table} WHERE email=?";
 
         $user = Database::Query($stmt, [$email])->fetch();
         return $user != null;

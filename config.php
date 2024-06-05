@@ -1,6 +1,6 @@
 <?php
 return [
-  "DB_NAME" => "jobsportaldb",
+  "DB_NAME" => "linkedin_clone_db",
   "DB_HOST" => "localhost",
   "DB_PORT" => 3306,
   "DB_USERNAME" => "root",
