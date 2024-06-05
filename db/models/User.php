@@ -7,27 +7,28 @@ use DB\Database as Database;
 use utils\Utils as Utils;
 use UnexpectedValueException;
 
-abstract class User
+class User
 {
-    protected $tableName;
+    protected static $tableName = 'users';
     protected $userId;
     protected $createdAt;
     protected $updatedAt;
-    protected $isRecruiter;
 
-    protected function __construct(
-        protected string $ImagePath,
+    public function __construct(
         protected string $Fname,
         protected string $Lname,
         protected string $email,
         protected string $pswd,
-        protected string $phone,
-        protected string $industry,
-        protected string $title,
-        protected string $currentCompany,
-        protected string $about
+        protected bool $isRecruiter,
+        protected string $ImagePath = "-",
+        protected string $phone = "-",
+        protected string $industry = "-",
+        protected string $title = "-",
+        protected string $currentCompany = "-",
+        protected string $about = "-"
     ) {
         $this->validateProperties();
+        $this->isRecruiter = $isRecruiter;
     }
 
     protected function validateProperties(): void
@@ -37,38 +38,46 @@ abstract class User
         Utils::validateProperty("Lname", $this->Lname, 50, 2);
         Utils::validateProperty("email", $this->email, 50, 2);
         Utils::validateProperty("pswd", $this->pswd, 256, 6);
-        Utils::validateProperty("phone", $this->phone, 25, 7);
-        Utils::validateProperty("industry", $this->industry, 50, 5);
-        Utils::validateProperty("title", $this->title, 50, 5);
+        Utils::validateProperty("phone", $this->phone, 25, 1);
+        Utils::validateProperty("industry", $this->industry, 50, 1);
+        Utils::validateProperty("title", $this->title, 50, 1);
         Utils::validateProperty("currentCompany", $this->currentCompany, 50, 0);
         Utils::validateProperty("about", $this->about, 1024 * 1024, 0);
     }
 
 
-    protected function createNewRecord()
+    public function createNewRecord()
     {
         $this->userId = Utils::generateUUID();
-        $this->createdAt = date("Y-m-d H:i:s");
-        $this->updatedAt = $this->createdAt;
+        $this->createdAt = $this->updatedAt = date("Y-m-d H:i:s");
 
-        Database::Query("
-        INSERT INTO
-        $this->tableName(id, image, first_name, last_name, email, phone, password,
-              industry, current_company, title, about, is_recruiter, created_at, updated_at)
-        VALUES('$this->userId', '$this->ImagePath', '$this->Fname', '$this->Lname', '$this->email', '$this->pswd',
-               '$this->phone', '$this->industry', '$this->currentCompany', '$this->title', '$this->about', '$this->isRecruiter',
-               '$this->createdAt', '$this->updatedAt');
-        ");
+        $stmt = "INSERT INTO " . self::$tableName . " (id, image, first_name, last_name, email, phone, password, industry, current_company, title, about, is_recruiter, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $params = [
+            $this->userId,
+            $this->ImagePath,
+            $this->Fname,
+            $this->Lname,
+            $this->email,
+            $this->phone,
+            $this->pswd,
+            $this->industry,
+            $this->currentCompany,
+            $this->title,
+            $this->about,
+            $this->isRecruiter,
+            $this->createdAt,
+            $this->updatedAt
+        ];
+        Database::Query($stmt, $params);
     }
 
-
-
-    public static function authenticateUser(string $email, string $password): ?string
+    public static function authenticateUser(string $email, string $password)
     {
         $result = Database::Query("SELECT * FROM users WHERE email = '$email' LIMIT 1")->fetch();
 
         if (empty($result)) {
-            return null;
+            return "email not found";
         }
 
         if ($password === $result['password']) {
@@ -78,7 +87,7 @@ abstract class User
             ];
         }
 
-        return null;
+        return "wrong password";
     }
 
     public function updateImagePath(string $newImagePath): void
@@ -163,5 +172,13 @@ abstract class User
     {
         // also will delete any record on any table related with this record
         Database::Query("DELETE FROM '$this->tableName' WHERE id = '$this->userId'");
+    }
+
+    public static function checkEmailExist($email) : bool
+    {
+        $stmt = "SELECT * FROM " . self::$tableName . " WHERE email=?";
+
+        $user = Database::Query($stmt, [$email])->fetch();
+        return $user != null;
     }
 }

@@ -24,9 +24,14 @@ class Database
         return self::$instance->dbh;
     }
 
-    public static function Query($query)
+    public static function Query($query, $params = [])
     {
         $stmt = self::GetConnection()->prepare($query);
+        if(count($params) > 0) {
+            for ($i=1; $i <= count($params); $i++) {
+                $stmt->bindValue($i, $params[$i - 1]);
+            }
+        }
         $stmt->execute();
 
         return $stmt;
