@@ -8,7 +8,7 @@ class Utils
 {
     public static function base_path($path)
     {
-        return $_SERVER['DOCUMENT_ROOT'] . "/" .$path;
+        return $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['config']['baseFolder'] . "/" .$path;
     }
 
     public static function abort($code = 404)

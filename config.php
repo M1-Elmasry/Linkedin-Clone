@@ -1,5 +1,6 @@
 <?php
 return [
+  // DATABASE
   "DB_NAME" => "linkedin_clone_db",
   "DB_HOST" => "localhost",
   "DB_PORT" => 3306,
@@ -10,6 +11,8 @@ return [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_EMULATE_PREPARES   => false,
-  ]
+  ],
 
+  // SERVER
+  "baseFolder" => "jobportal_API"
 ];

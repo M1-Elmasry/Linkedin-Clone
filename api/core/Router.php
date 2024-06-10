@@ -35,11 +35,13 @@ class Router
     {
       Utils::abort();
     }
-
+    
     $uri = parse_url($uri);
     $path = $uri["path"];
     $pathContent = explode('/', substr($path, 1));
     $route = null;
+    
+    echo "path: " . $path . "\n";
 
     if(count($pathContent) > 1)
     {
@@ -51,6 +53,7 @@ class Router
         if($routeItem['method'] != $method) {
           continue;
         }
+        echo "this route: " . $routeItem['uri'] . "\n";
         
         $checkedPath = "";
         
@@ -110,21 +113,17 @@ class Router
     $controllerName = "";
     $actionName = "";
     // separate controller name and function name
-    if(str_contains($controller, ':'))
-    {
+    if(str_contains($controller, ':')) {
       $controllerArray = explode(':', $controller);
       $controllerName = $controllerArray[0];
       $actionName = $controllerArray[1];
-    }
-    else
-    {
+    } else {
       $controllerName = $controller;
       $actionName = 'Index';
     }
 
     // extract parametars if any
-    if(str_contains($uri, '{'))
-    {
+    if(str_contains($uri, '{')) {
       $paramArray = explode('{', $uri);
       $uri = rtrim($paramArray[0], '/');
       
@@ -135,12 +134,16 @@ class Router
       }
     }
 
+    if($GLOBALS['config']['baseFolder'] !== '') {
+      $uri = "/{$GLOBALS['config']['baseFolder']}/{$uri}";
+    }
+
     // cache the new route
     $this->routes[] = [
       'method' => $method,
       'uri' => $uri,
       'controllerName' => "\API\Controllers\\{$controllerName}Controller",
-      'controllerPath' => "\api\controllers/{$controllerName}Controller.php",
+      'controllerPath' => "\\{$GLOBALS['config']['baseFolder']}\api\controllers/{$controllerName}Controller.php",
       'action' => $actionName,
       'params' => $params,
       'middleware' => null

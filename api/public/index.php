@@ -1,8 +1,12 @@
 <?php
 session_start();
+
+global $config; 
+$config = require_once("../../config.php");
+
 // autoloader for requiring classes on initialize or call
 spl_autoload_register(function($class) {
-  require "{$_SERVER['DOCUMENT_ROOT']}/{$class}.php";
+  require "{$_SERVER['DOCUMENT_ROOT']}/{$GLOBALS['config']['baseFolder']}/{$class}.php";
 });
 
 $router = new \API\Core\Router;
