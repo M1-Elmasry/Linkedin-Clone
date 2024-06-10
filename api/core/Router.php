@@ -40,8 +40,6 @@ class Router
     $path = $uri["path"];
     $pathContent = explode('/', substr($path, 1));
     $route = null;
-    
-    echo "path: " . $path . "\n";
 
     if(count($pathContent) > 1)
     {
@@ -53,7 +51,6 @@ class Router
         if($routeItem['method'] != $method) {
           continue;
         }
-        echo "this route: " . $routeItem['uri'] . "\n";
         
         $checkedPath = "";
         
@@ -100,7 +97,7 @@ class Router
     {
       Middleware::Resolve($route['middleware']);
     }
-
+    
     require Utils::base_path($route['controllerPath']);
     
     $controller = new $route['controllerName'];
@@ -135,15 +132,15 @@ class Router
     }
 
     if($GLOBALS['config']['baseFolder'] !== '') {
-      $uri = "/{$GLOBALS['config']['baseFolder']}/{$uri}";
-    }
+      $uri = "{$GLOBALS['config']['baseFolder']}/{$uri}";
+    } 
 
     // cache the new route
     $this->routes[] = [
       'method' => $method,
-      'uri' => $uri,
+      'uri' => '/' . $uri,
       'controllerName' => "\API\Controllers\\{$controllerName}Controller",
-      'controllerPath' => "\\{$GLOBALS['config']['baseFolder']}\api\controllers/{$controllerName}Controller.php",
+      'controllerPath' => "api\controllers/{$controllerName}Controller.php",
       'action' => $actionName,
       'params' => $params,
       'middleware' => null
