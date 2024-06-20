@@ -6,9 +6,15 @@ use UnexpectedValueException;
 
 class Utils
 {
+    private static $basePath = null;
     public static function base_path($path)
     {
-        return $_SERVER['DOCUMENT_ROOT'] . "/" .$path;
+        if(self::$basePath == null) {
+            self::$basePath = $GLOBALS['config']['baseFolder'] !== '' 
+                                    ? $_SERVER['DOCUMENT_ROOT'] . '/' . $GLOBALS['config']['baseFolder'] . "/"
+                                    : $_SERVER['DOCUMENT_ROOT'];
+        }
+        return self::$basePath . $path;
     }
 
     public static function abort($code = 404)

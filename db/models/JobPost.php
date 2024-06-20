@@ -134,4 +134,10 @@ class JobPost
             "updatedAt" => $this->updatedAt
         ];
     }
+
+    public function delete(): void
+    {
+        // also will delete any record on any table related with this record
+        Database::Query("DELETE FROM '$this->tableName' WHERE id = '$this->jobPostId'");
+    }
 }

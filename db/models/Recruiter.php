@@ -1,38 +1,34 @@
 <?php
-
 namespace DB\Models;
 
-require('db/models/User.php');
-require('db/Database.php');
-require('utils/utils.php');
-use DB\Models\User as User;
-use DB\Database as Database;
-use utils\Utils as Utils;
+use \DB\Models\User;
+use \DB\Database;
 
 class Recruiter extends User
 {
     public function __construct(
-        string $imagePath,
         string $Fname,
         string $Lname,
         string $email,
         string $pswd,
-        string $phone,
-        string $industry,
-        string $title,
-        string $currentCompany,
-        string $about,
-        bool $is_new = true, // this for encapsulate obj without create new record in db
+        bool $is_new = false, // this for encapsulate obj without create new record in db
+        string $imagePath = '-',
+        string $phone = '-',
+        string $industry = '-',
+        string $title = '-',
+        string $currentCompany = '-',
+        string $about = '-',
         string $id = null,  // dependency for $is_new
         string $createdAt = null, // dependency for $is_new
         string $updatedAt = null, // dependency for $is_new
     ) {
         parent::__construct(
-            $imagePath,
             $Fname,
             $Lname,
             $email,
             $pswd,
+            true,
+            $imagePath,
             $phone,
             $industry,
             $title,
@@ -41,7 +37,6 @@ class Recruiter extends User
         );
 
         $this->tableName = "recruiters";
-        $this->isRecruiter = true;
 
         if ($is_new) {
             $this->createNewRecord();

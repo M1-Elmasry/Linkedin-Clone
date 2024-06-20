@@ -14,6 +14,7 @@ class Middleware
       if(!$middleware->Verify())
       {
         $middleware->OnReject();
+        return;
       }
       $middleware->OnApprove();
   }

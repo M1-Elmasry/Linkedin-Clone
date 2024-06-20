@@ -35,7 +35,7 @@ class Router
     {
       Utils::abort();
     }
-
+    
     $uri = parse_url($uri);
     $path = $uri["path"];
     $pathContent = explode('/', substr($path, 1));
@@ -62,10 +62,9 @@ class Router
             $params[] = $pathContent[$i];
             continue;
           }
-          
           $checkedPath = $checkedPath . '/' . $pathContent[$i];
           
-          if($checkedPath != $routeItem['uri'] || count($routeItem['params']) != $pathContentCount - $i - 1)
+          if($checkedPath != $routeItem['uri'] || count($routeItem['params']) != count($params))
           {
             continue;
           }
@@ -97,7 +96,7 @@ class Router
     {
       Middleware::Resolve($route['middleware']);
     }
-
+    
     require Utils::base_path($route['controllerPath']);
     
     $controller = new $route['controllerName'];
@@ -110,21 +109,17 @@ class Router
     $controllerName = "";
     $actionName = "";
     // separate controller name and function name
-    if(str_contains($controller, ':'))
-    {
+    if(str_contains($controller, ':')) {
       $controllerArray = explode(':', $controller);
       $controllerName = $controllerArray[0];
       $actionName = $controllerArray[1];
-    }
-    else
-    {
+    } else {
       $controllerName = $controller;
       $actionName = 'Index';
     }
 
     // extract parametars if any
-    if(str_contains($uri, '{'))
-    {
+    if(str_contains($uri, '{')) {
       $paramArray = explode('{', $uri);
       $uri = rtrim($paramArray[0], '/');
       
@@ -135,16 +130,22 @@ class Router
       }
     }
 
+    if($GLOBALS['config']['baseFolder'] !== '') {
+      $uri = "{$GLOBALS['config']['baseFolder']}/{$uri}";
+    } 
+
     // cache the new route
     $this->routes[] = [
       'method' => $method,
-      'uri' => $uri,
+      'uri' => '/' . $uri,
       'controllerName' => "\API\Controllers\\{$controllerName}Controller",
-      'controllerPath' => "\api\controllers/{$controllerName}Controller.php",
+      'controllerPath' => "api/controllers/{$controllerName}Controller.php",
       'action' => $actionName,
       'params' => $params,
       'middleware' => null
     ];
+
+    //print_r($this->routes);
 
     return $this;
   }
