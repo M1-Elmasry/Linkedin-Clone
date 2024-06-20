@@ -1,16 +1,16 @@
 RewriteEngine On
 
-RewriteBase /jobportal_API/
+RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
 RewriteCond $1 !^(index\.php|public|css|js|robots\.txt)
 
 RewriteRule ^(.*)$ index.php/params=$1 [L,QSA]
 
 ErrorDocument 404 /index.php
 
-
-RewriteCond %{THE_REQUEST} /api/public/([^\s?]*) [NC]
+RewriteCond %{THE_REQUEST} /src/api/public/([^\s?]*) [NC]
 RewriteRule ^ %1 [L,NE,R=302]
-RewriteRule ^((?!api/public/).*)$ api/public/$1 [L,NC]
+RewriteRule ^((?!src/api/public/).*)$ /src/api/public/$1 [L,NC]

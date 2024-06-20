@@ -2,7 +2,7 @@
 session_start();
 
 global $config; 
-$config = require_once("../../config.php");
+$config = require_once("../../../config.php");
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');

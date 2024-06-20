@@ -130,9 +130,9 @@ class Router
       }
     }
 
-    if($GLOBALS['config']['baseFolder'] !== '') {
-      $uri = "{$GLOBALS['config']['baseFolder']}/{$uri}";
-    } 
+    // if($GLOBALS['config']['baseFolder'] !== '') {
+    //   $uri = "{$GLOBALS['config']['baseFolder']}/{$uri}";
+    // } 
 
     // cache the new route
     $this->routes[] = [
