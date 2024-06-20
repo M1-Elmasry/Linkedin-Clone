@@ -10,7 +10,7 @@ class Database
 
     private function __construct()
     {
-        $config = require_once(\utils\Utils::base_path("config.php"));
+        $config = $GLOBALS['config'];
 
         $dsn = "mysql:host={$config['DB_HOST']};port={$config['DB_PORT']};dbname={$config['DB_NAME']};charset={$config['DB_CHARSET']}";
 

@@ -62,10 +62,9 @@ class Router
             $params[] = $pathContent[$i];
             continue;
           }
-          
           $checkedPath = $checkedPath . '/' . $pathContent[$i];
           
-          if($checkedPath != $routeItem['uri'] || count($routeItem['params']) != $pathContentCount - $i - 1)
+          if($checkedPath != $routeItem['uri'] || count($routeItem['params']) != count($params))
           {
             continue;
           }
@@ -140,11 +139,13 @@ class Router
       'method' => $method,
       'uri' => '/' . $uri,
       'controllerName' => "\API\Controllers\\{$controllerName}Controller",
-      'controllerPath' => "api\controllers/{$controllerName}Controller.php",
+      'controllerPath' => "api/controllers/{$controllerName}Controller.php",
       'action' => $actionName,
       'params' => $params,
       'middleware' => null
     ];
+
+    //print_r($this->routes);
 
     return $this;
   }
