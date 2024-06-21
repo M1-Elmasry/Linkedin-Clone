@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./static/images/logo.png" />
+    <title>Linkdin Clone</title>
+    <link rel="stylesheet" href="./static/css/index.css"/>
+    <link rel="stylesheet" href="./static/css/style.css" />
+  </head>
+  <body>
+    <nav id="Navbar" class="navbar ">
+      <div class="navbar-left">
+        <a href="index.html" class="logo"><img src="./static/images/logo.png" /></a>
+        <div class="search-box">
+          <img src="./static/images/search.png" />
+          <input type="text" placeholder="Search" />
+        </div>
+      </div>
+      <div class="navbar-center">
+        <ul>
+          <li>
+            <a href="#" class="active-link"
+              ><img src="./static/images/home.png" /><span>Home</span></a
+            >
+          </li>
+          <li>
+            <a href="#"><img src="./static/images/jobs.png" /><span>Jobs</span></a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-right">
+        <div class="online">
+          <img
+            src="./static/images/my profile.png"
+            class="nav-profile-img"
+            onclick="toggleMenu()"
+          />
+        </div>
+        <div class="offline">
+          <button class="loginBtn">Login</button>
+        </div>
+      </div>
+
+      <div class="profile-menu-wrap" id="profileMenu">
+        <div class="profile-menu">
+          <div class="user-info">
+            <img src="./static/images/my profile.png" />
+            <div>
+              <h3>Om Jaju</h3>
+              <a href="profile.html">See your profile</a>
+            </div>
+          </div>
+          <hr />
+          <a href="#" class="profile-menu-link">
+            <img src="./static/images/feedback.png" />
+            <p>Give Feedback</p>
+            <span>></span>
+          </a>
+          <a href="#" class="profile-menu-link">
+            <img src="./static/images/setting.png" />
+            <p>Settings & Privacy</p>
+            <span>></span>
+          </a>
+          <a href="#" class="profile-menu-link">
+            <img src="./static/images/help.png" />
+            <p>Help & Support</p>
+            <span>></span>
+          </a>
+          <a href="#" class="profile-menu-link">
+            <img src="./static/images/display.png" />
+            <p>Display & Accessibility</p>
+            <span>></span>
+            <a href="#" class="profile-menu-link" onclick="return Logout()">
+              <img src="./static/images/logout.png" />
+              <p>Logout</p>
+              <span>></span>
+            </a>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!--navbar close-->
+
+    <div class="container">
+      <div class="left-sidebar">
+        <div class="sidebar-profile-box">
+          <img src="./static/images/banner.jpg" width="100%" />
+          <div class="sidebar-profile-info">
+            <img src="./static/images/my profile.png" />
+            <h1>Om Jaju</h1>
+            <h3>
+              Frontend developer | ReactJS | JavaScript | Python | Redux | HTML
+              | CSS | NextJS | Cybersecurity |
+            </h3>
+          </div>
+        </div>
+        <div class="sidebar-activity" id="sidebar-activity">
+          <h3>RECENT</h3>
+          <a href="#"><img src="./static/images/recent.png" />Web Development</a>
+          <a href="#"><img src="./static/images/recent.png" />User Interface</a>
+          <a href="#"><img src="./static/images/recent.png" />Online Learning</a>
+          <a href="#"><img src="./static/images/recent.png" />Learn Online</a>
+          <a href="#"><img src="./static/images/recent.png" />Code Better</a>
+          <a href="#"><img src="./static/images/recent.png" />Group Learning</a>
+          <h3>GROUPS</h3>
+          <a href="#"><img src="./static/images/group.png" />Web Design Group</a>
+          <a href="#"><img src="./static/images/group.png" />HTML & CSS Learners</a>
+          <a href="#"
+            ><img src="./static/images/group.png" />Python & JavaScript Group</a
+          >
+          <a href="#"><img src="./static/images/group.png" />Learn Coding Online</a>
+          <h3>HASHTAG</h3>
+          <a href="#"><img src="./static/images/hashtag.png" />wbdevelopment</a>
+          <a href="#"><img src="./static/images/hashtag.png" />userinterface</a>
+          <a href="#"><img src="./static/images/hashtag.png" />onlinelearning</a>
+          <div class="discover-more-link">
+            <a href="#">Discover more</a>
+          </div>
+        </div>
+        <p id="showMoreLink">Show more</p>
+      </div>
+      <div class="main-content">
+        <div class="create-post">
+          <div class="create-post-input">
+            <img src="./static/images/my profile.png" />
+            <textarea rows="2" placeholder="Write a post"></textarea>
+          </div>
+          <div class="create-post-links">
+            <li><img src="./static/images/photo.png" />Photo</li>
+            <li><img src="./static/images/video.png" />Video</li>
+            <li><img src="./static/images/event.png" />Event</li>
+            <li>Post</li>
+          </div>
+        </div>
+        <div class="sort-by">
+          <hr />
+          <p>
+            Sort by: <span>top <img src="./static/images/down-arrow.png" /></span>
+          </p>
+        </div>
+        <div id="PostsList">
+          <div class="job-listing">
+            <div class="job-header">
+              <div class="job-header-data">
+                <h2 class="postPosition"></h2>
+                <p class="company"></p>
+                <p class="posted"></p>
+                <p class="applicants-num">1 Applicant</p>
+                <div class="buttons">
+                  <button class="apply-btn">Apply For Job</button>
+                  <button class="details-btn">Show Details</button>
+                </div>
+              </div>
+              <div class="job-header-img"></div>
+            </div>
+      
+            <!-- start job description   -->
+      
+            <div class="job-details" id="job-details">
+              <div class="job-info">
+                <div>
+                  <h3>Salary</h3>
+                  <p class="salary-value"></p>
+                </div>
+                <div>
+                  <h3>Industry</h3>
+                  <p class="industry-value"></p>
+                </div>
+                <div>
+                  <h3>Job Description</h3>
+                  <p class="description"></p>
+                </div>
+                <div class="skills">
+                  <h3>Skills Required</h3>
+                  <ul>
+                    <li>Business Administration</li>
+                    <li>Administration</li>
+                    <li>Human Resources (HR)</li>
+                    <li>Recruitment</li>
+                    <li>Screening</li>
+                    <li>Sourcing</li>
+                    <li>Hiring</li>
+                    <li>Italian</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+      
+            <!-- start interaction-section -->
+      
+            <div class="interaction-section">
+              <div class="interaction-header">
+                <div class="likes-count">
+                  <span>👍 47 Likes</span>
+                </div>
+                <div class="comments-count">
+                  <span>4 comments</span>
+                </div>
+              </div>
+              <div class="interaction-buttons">
+                <span>Like</span>
+                <span onclick="toggleComments()">Comments</span>
+              </div>
+      
+              <!-- strat toggleable comments section -->
+      
+              <div id="comments-container" style="display: none">
+                <div class="add-comment">
+                  <img
+                    src="https://placehold.co/40x40?text=img"
+                    alt="User Avatar"
+                    class="user-avatar"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    class="comment-input"
+                  />
+                </div>
+                <div class="comments-section">
+      
+                  <!-- placeholder comment -->
+      
+                  <div class="comment">
+                    <img
+                      src="https://placehold.co/40x40?text=img"
+                      alt="User Avatar"
+                      class="comment-avatar"
+                    />
+                    <div class="comment-data">
+                      <div class="comment-actions">
+                        <button class="actions-btn" onclick="showCommentActions()">
+                          ...
+                        </button>
+                        <div class="actions-menu">
+                          <p>Edit</p>
+                          <p>Delete</p>
+                        </div>
+                      </div>
+                      <p class="comment-user-name">Ahmed Samir Fayed</p>
+                      <p class="comment-user-title">Hardware Engineer</p>
+                      <p class="comment-time">2d</p>
+                      <p class="comment-body">
+                        This point is understated: "Use Database Indexing and search
+                        engines for efficient data retrievals." 80% of the performance
+                        optimization can be done at this level!
+                      </p>
+                    </div>
+                  </div>
+                  <div class="replies">
+      
+                    <!-- placeholder reply -->
+      
+                    <div class="reply">
+                      <div class="comment">
+                        <img
+                          src="https://placehold.co/40x40?text=img"
+                          alt="User Avatar"
+                          class="comment-avatar"
+                        />
+                        <div class="comment-data">
+                          <div class="comment-actions">
+                            <button
+                              class="actions-btn"
+                              onclick="showCommentActions()"
+                            >
+                              ...
+                            </button>
+                            <div class="actions-menu">
+                              <p>Edit</p>
+                              <p>Delete</p>
+                            </div>
+                          </div>
+                          <p class="comment-user-name">Emad Ramadan Elzorqany</p>
+                          <p class="comment-user-title">Embedded Hardware Engineer</p>
+                          <p class="comment-time">1d</p>
+                          <p class="comment-body">
+                            spot on! thanks for adding your insights.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- add more comments and replies as needed -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+    
+        <!-- upload resume popup -->
+    
+        <div id="applyModal" class="modal">
+          <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Upload Resume</h2>
+            <form id="applyForm">
+              <input type="file" id="resume" name="resume" required />
+              <button type="submit">Submit Application</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="right-sidebar">
+
+        <div class="sidebar-ad">
+          <div>
+            <img src="./static/images/my profile.png" />
+            <img src="./static/images/web logo.png" />
+          </div>
+          <b>Technical Enthusiast</b>
+        </div>
+
+        <div class="sidebar-useful-links">
+          <a href="#">About</a>
+          <a href="#">Accessibility</a>
+          <a href="#">Help Center</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Advertising</a>
+          <a href="#">Get the App</a>
+          <a href="#">More</a>
+
+          <div class="copyright-msg">
+            <img src="./static/images/logo.png" />
+            <p>LINKEDIN OJ &#169; 2023</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./static/js/index.js"></script>
+  </body>
+</html>

@@ -2,6 +2,7 @@
 namespace API\Core;
 
 use \DB\Models\User;
+use \API\Core\JWT;
 
 class Authenticator extends Controller
 {
@@ -14,10 +15,10 @@ class Authenticator extends Controller
   {
     $_SESSION['userId'] = $user['userId'];
     $_SESSION['isRecuirter'] = $user['isRecuirter'];
-
+    $jwt = new JWT();
+    $_SESSION['csrf_token'] = $jwt->encode($user);
     session_regenerate_id(true);
-
-    $token = 'user token';
+    $token = $_SESSION['csrf_token'];
     
     return $token;
   }

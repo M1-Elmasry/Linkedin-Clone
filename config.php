@@ -14,5 +14,6 @@ return [
   ],
 
   // SERVER
-  "baseFolder" => "jobportal_API"
+  "baseFolder" => "src",
+  "Secret_Key" => "asnfbaknsfbaksfbkabfajhk"
 ];
