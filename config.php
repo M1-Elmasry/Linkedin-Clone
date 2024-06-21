@@ -14,5 +14,6 @@ return [
   ],
 
   // SERVER
-  "baseFolder" => "src"
+  "baseFolder" => "src",
+  "Secret_Key" => "asnfbaknsfbaksfbkabfajhk"
 ];

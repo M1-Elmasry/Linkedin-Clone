@@ -3,6 +3,7 @@ namespace API\Core;
 
 use utils\Utils;
 use \API\Core\Middleware;
+use \API\Core\JWT;
 
 class Router
 {
@@ -40,6 +41,16 @@ class Router
     $path = $uri["path"];
     $pathContent = explode('/', substr($path, 1));
     $route = null;
+
+    if(array_key_exists('Authorization', $params)) {
+      $jwt = new JWT();
+      $data = $jwt->AuthenticateJWTToken($params['Authorization']);
+      if($data) {
+        $_SESSION['userId'] = $data['userId'];
+        $_SESSION['isRecuirter'] = $data['isRecuirter'];
+      }
+      unset($params['Authorization']);
+    }
 
     if(count($pathContent) > 1)
     {
