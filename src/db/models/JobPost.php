@@ -2,10 +2,7 @@
 
 namespace DB\Models;
 
-require('db/Database.php');
-use DB\Database as Database;
-
-require('utils/utils.php');
+use DB\Database;
 use utils\Utils as Utils;
 
 class JobPost
@@ -61,6 +58,14 @@ class JobPost
             $record["created_at"],
             $record["updated_at"]
         );
+    }
+    public static function GetLatestPosts()
+    {
+        $records = Database::Query("SELECT * FROM job_posts ORDER BY updated_at DESC")->fetchAll();
+        if(empty($records)) {
+            return null;
+        }
+        return $records;
     }
 
     protected function validateProperties(): void
