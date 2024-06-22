@@ -73,7 +73,7 @@ class JobPost
 
   public static function GetLatestPostsByIndustry(string $industry, int $limit): ?array
   {
-    $records = Database::Query("SELECT * FROM job_posts WHERE industry = '$industry' ORDER BY updated_at DESC LIMIT '$limit'")->fetchAll();
+    $records = Database::Query("SELECT * FROM job_posts WHERE industry = ? ORDER BY updated_at DESC", [$industry])->fetchAll();
 
     if (empty($records)) {
       return null;
@@ -84,8 +84,8 @@ class JobPost
 
   protected function validateProperties(): void
   {
-    Utils::validateProperty("authorId", $this->authorId, 36, 36);
-    Utils::validateProperty("imagePath", $this->imagePath, 256, 2);
+    Utils::validateProperty("authorId", $this->authorId, 36, 1);
+    Utils::validateProperty("imagePath", $this->imagePath, 256, 1);
     Utils::validateProperty("position", $this->position, 50, 2);
     Utils::validateProperty("industry", $this->industry, 50, 2);
     Utils::validateProperty("location", $this->position, 50, 2);

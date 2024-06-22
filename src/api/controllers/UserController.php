@@ -5,7 +5,10 @@ use \API\Core\Authenticator;
 use \API\Core\Validator;
 use DB\Models\JobSeeker;
 use DB\Models\Recruiter;
+use \DB\Models\JobPost;
 use \DB\Models\User;
+use \DB\Models\Experience;
+use \DB\Models\Skill;
 
 class UserController extends Authenticator
 {
@@ -60,5 +63,36 @@ class UserController extends Authenticator
   {
     $this->Unauthenticate();
     $this->response("logged out successfully");
+  }
+
+  public function Feed()
+  {
+    $posts = JobPost::GetLatestPostsByIndustry($_SESSION['industry'], 20);
+    return $this->response([
+      'user' => [
+        'userId' => $_SESSION['userId'],
+      ],
+      'posts' => $posts
+    ]);
+  }
+
+  public function Profile($id)
+  {
+    if($id == "null" && $this->IsAuthenticated()) {
+      $id = $_SESSION['userId'];
+    }
+    else {
+      return $this->response("no user id specified", false);
+    }
+
+    $jobseeker = JobSeeker::getJobSeekerById($id)->getData();
+    $experiences = Experience::getAllExperiencesByUserId($id);
+    $skills = Skill::getAllSkillsByUserId($id);
+
+    return $this->response([
+      'user' => $jobseeker,
+      'experience' => $experiences,
+      'skills' => $skills
+    ]);
   }
 }

@@ -4,79 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="./static/images/logo.png" />
-    <title>Linkdin Clone</title>
+    <title>The Quite Storm</title>
     <link rel="stylesheet" href="./static/css/index.css"/>
     <link rel="stylesheet" href="./static/css/style.css" />
+    <link rel="stylesheet" href="./static/css/navbar_and_footer.css" />
+    <link rel="stylesheet" href="./static/css/navbar_and_footer.css" />
+    <link rel="stylesheet" href="./static/css/create_post.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Play&display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat&family=Oswald:wght@400;600&display=swap"/>
   </head>
   <body>
-    <nav id="Navbar" class="navbar ">
-      <div class="navbar-left">
-        <a href="index.html" class="logo"><img src="./static/images/logo.png" /></a>
-        <div class="search-box">
-          <img src="./static/images/search.png" />
-          <input type="text" placeholder="Search" />
-        </div>
-      </div>
-      <div class="navbar-center">
-        <ul>
-          <li>
-            <a href="#" class="active-link"
-              ><img src="./static/images/home.png" /><span>Home</span></a
-            >
-          </li>
-          <li>
-            <a href="#"><img src="./static/images/jobs.png" /><span>Jobs</span></a>
-          </li>
-        </ul>
-      </div>
-      <div class="navbar-right">
-        <div class="online">
-          <img
-            src="./static/images/my profile.png"
-            class="nav-profile-img"
-            onclick="toggleMenu()"
-          />
-        </div>
-        <div class="offline">
-          <button class="loginBtn">Login</button>
-        </div>
-      </div>
-
-      <div class="profile-menu-wrap" id="profileMenu">
-        <div class="profile-menu">
-          <div class="user-info">
-            <img src="./static/images/my profile.png" />
-            <div>
-              <h3>Om Jaju</h3>
-              <a href="profile.html">See your profile</a>
-            </div>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="navbar-header">
+          <div>
+            <img src="./static/images/logo.jpg" alt="" class="nav-logo-img" />
+            <a href="./index.html" class="navbar-brand">JobPosting</a>
           </div>
-          <hr />
-          <a href="#" class="profile-menu-link">
-            <img src="./static/images/feedback.png" />
-            <p>Give Feedback</p>
-            <span>></span>
-          </a>
-          <a href="#" class="profile-menu-link">
-            <img src="./static/images/setting.png" />
-            <p>Settings & Privacy</p>
-            <span>></span>
-          </a>
-          <a href="#" class="profile-menu-link">
-            <img src="./static/images/help.png" />
-            <p>Help & Support</p>
-            <span>></span>
-          </a>
-          <a href="#" class="profile-menu-link">
-            <img src="./static/images/display.png" />
-            <p>Display & Accessibility</p>
-            <span>></span>
-            <a href="#" class="profile-menu-link" onclick="return Logout()">
-              <img src="./static/images/logout.png" />
-              <p>Logout</p>
-              <span>></span>
-            </a>
-          </a>
+          <button class="navbar-toggle" onclick="toggleMenu()">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse" id="navbarMenu">
+          <ul class="nav">
+            <li>
+              <a href="./index.html"><span class="icon-home"></span>Home</a>
+            </li>
+            <li>
+              <a href="./profile.html"><span class="icon-user"></span>Profile</a>
+            </li>
+            
+            <li>
+              <a href="#" onclick="return Logout()"><span class="icon-user"></span>Logout</a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
@@ -122,17 +87,13 @@
         <p id="showMoreLink">Show more</p>
       </div>
       <div class="main-content">
-        <div class="create-post">
-          <div class="create-post-input">
-            <img src="./static/images/my profile.png" />
-            <textarea rows="2" placeholder="Write a post"></textarea>
-          </div>
-          <div class="create-post-links">
-            <li><img src="./static/images/photo.png" />Photo</li>
-            <li><img src="./static/images/video.png" />Video</li>
-            <li><img src="./static/images/event.png" />Event</li>
-            <li>Post</li>
-          </div>
+        <div class="add-post">
+          <img
+            src="https://placehold.co/70x70?text=img"
+            alt=""
+            id="add-post-prof-img"
+          />
+          <button id="openPopup">Add Post</button>
         </div>
         <div class="sort-by">
           <hr />
@@ -172,7 +133,7 @@
                   <h3>Job Description</h3>
                   <p class="description"></p>
                 </div>
-                <div class="skills">
+                <!-- <div class="skills">
                   <h3>Skills Required</h3>
                   <ul>
                     <li>Business Administration</li>
@@ -184,7 +145,7 @@
                     <li>Hiring</li>
                     <li>Italian</li>
                   </ul>
-                </div>
+                </div> -->
               </div>
             </div>
       
@@ -201,7 +162,7 @@
               </div>
               <div class="interaction-buttons">
                 <span>Like</span>
-                <span onclick="toggleComments()">Comments</span>
+                <span class="comments-show">Comments</span>
               </div>
       
               <!-- strat toggleable comments section -->
@@ -214,6 +175,7 @@
                     class="user-avatar"
                   />
                   <input
+                    id="addCommentInput"
                     type="text"
                     placeholder="Add a comment..."
                     class="comment-input"
@@ -249,9 +211,9 @@
                       </p>
                     </div>
                   </div>
-                  <div class="replies">
+                  <!-- <div class="replies">
       
-                    <!-- placeholder reply -->
+                    -- placeholder reply -
       
                     <div class="reply">
                       <div class="comment">
@@ -282,7 +244,7 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <!-- add more comments and replies as needed -->
                 </div>
               </div>
@@ -330,7 +292,45 @@
         </div>
       </div>
     </div>
+    <div id="popup" class="popup">
+      <div class="popup-content">
+        <span class="close">&times;</span>
+        <form onsubmit="OnAddNewPost(event)">
+          <!-- <div class="form-row" id="addNewPost">
+            <label for="imageUpload">Company Image</label>
+            <input type="file" id="imageUpload" name="imageUpload" />
+          </div> -->
+          <div class="form-row">
+            <label for="position">Position</label>
+            <input type="text" id="title" name="position" />
+          </div>
 
+          <div class="form-row">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company" />
+          </div>
+          <div class="form-row">
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" />
+          </div>
+          <div class="form-row">
+            <label for="salary">Salary</label>
+            <input type="text" id="salary" name="salary" />
+          </div>
+          <div class="form-row">
+            <label for="industry">Industry</label>
+            <input type="text" id="industry" name="industry" />
+          </div>
+          <div class="form-row">
+            <label for="description">Description</label>
+            <textarea id="description" name="description"></textarea>
+          </div>
+          <div class="form-row">
+            <button type="submit">Post</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <script src="./static/js/index.js"></script>
   </body>
 </html>

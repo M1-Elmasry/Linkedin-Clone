@@ -86,6 +86,7 @@ class User
     if ($password === $result['password']) {
       return [
         "userId" => $result['id'],
+        "industry" => $result['industry'],
         "isRecuirter" => $result['is_recruiter']
       ];
     }

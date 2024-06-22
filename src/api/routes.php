@@ -11,6 +11,10 @@ $router->get('test/{id}/{data}', 'Home:Test');
 $router->post('login', 'User:Login', ['email', 'password'])->only('Guest');
 $router->post('register', 'User:Register', ['first_name', 'last_name', 'email', 'password', 'is_recruiter'])->only('Guest');
 $router->post('logout', 'User:Logout')->only('Auth');
+$router->post('feed', 'User:Feed');
+$router->post('user', 'User:Profile', ['id']);
 
 // Post routes
-$router->get('post/latest', 'Post:Latest');
+$router->post('post/add', 'Post:AddNewPost', ['position', 'company', 'location', 'salary', 'industry', 'description']);
+$router->post('post/comments', 'Post:GetComments', ['id']);
+$router->post('post/add/comment', 'Post:AddComment', ['post_id', 'content']);

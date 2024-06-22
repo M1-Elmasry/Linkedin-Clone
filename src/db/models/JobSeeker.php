@@ -59,18 +59,18 @@ class JobSeeker extends User
     }
 
     return new JobSeeker(
-      $record['image'],
       $record['first_name'],
       $record['last_name'],
       $record['email'],
       $record['address'],
-      $record['phone'],
       $record['password'],
+      false,
+      $record['image'],
+      $record['phone'],
       $record['industry'],
       $record['title'],
       $record['current_company'],
       $record['about'],
-      false,
       $record["id"],
       $record["created_at"],
       $record["updated_at"]

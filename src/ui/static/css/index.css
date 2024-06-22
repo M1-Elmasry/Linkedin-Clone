@@ -903,3 +903,17 @@ a {
     }
 
 }
+
+#header-input {
+    padding: 15px;
+    display: flex;
+}
+
+#header-input input {
+    margin-left: 10px;
+    padding: 0 12px;
+    flex-grow: 1;
+}
+#createPostForm {
+    display: none;
+}

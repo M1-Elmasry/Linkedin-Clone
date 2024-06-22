@@ -47,6 +47,7 @@ class Router
       $data = $jwt->AuthenticateJWTToken($params['Authorization']);
       if($data) {
         $_SESSION['userId'] = $data['userId'];
+        $_SESSION['industry'] = $data['industry'];
         $_SESSION['isRecuirter'] = $data['isRecuirter'];
       }
       unset($params['Authorization']);

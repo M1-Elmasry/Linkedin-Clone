@@ -1,13 +1,7 @@
 <?php
-
 namespace DB\Models;
 
-require('db/Database.php');
-
 use DB\Database as Database;
-
-require('utils/utils.php');
-
 use utils\Utils as Utils;
 
 class Comment
@@ -59,7 +53,7 @@ class Comment
 
   public static function getAllCommentsByJobPostId(string $jobPostId): ?array
   {
-    $records = Database::Query("SELECT * FROM comments WHERE job_post_id = '$jobPostId' ")->fetchAll();
+    $records = Database::Query("SELECT * FROM comments WHERE post_id = '$jobPostId' ")->fetchAll();
 
     if (empty($records)) {
       return null;
@@ -93,8 +87,8 @@ class Comment
 
   protected function validateProperties(): void
   {
-    Utils::validateProperty("postId", $this->postId, 36, 36);
-    Utils::validateProperty("authorId", $this->authorId, 36, 36);
+    Utils::validateProperty("postId", $this->postId, 36, 1);
+    Utils::validateProperty("authorId", $this->authorId, 36, 1);
     Utils::validateProperty("content", $this->content, 1024 * 1024, 1);
   }
 
@@ -133,7 +127,7 @@ class Comment
     return [
       "commentId" => $this->commentId,
       "postId" => $this->postId,
-      "authorId" => $this->authorId,
+      "author_id" => $this->authorId,
       "content" => $this->content,
       "createdAt" => $this->createdAt,
       "updatedAt" => $this->updatedAt

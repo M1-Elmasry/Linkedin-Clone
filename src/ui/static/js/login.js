@@ -24,11 +24,17 @@ function HandleErrors(errs) {
     }
     ErrBox.innerHTML+= '<p>' + errs + '<?p>'
 }
+
+window.onload = () => {
+    if(window.localStorage.getItem("userToken") !== null) {
+        redirectToPage('login.html')
+    }
+}
 // calls
 async function OnLogin(e) {
     e.preventDefault()
     let formData = new FormData(e.target);
-    formData.append("Authorization", `Bearer ${window.localStorage.getItem("userToken")}`)
+    
     const response = await fetch(API + 'login', {
         credentials: "same-origin",
         method: "POST",
@@ -42,7 +48,7 @@ async function OnLogin(e) {
     }
     window.localStorage.setItem("userToken", res['data'])
 
-    //redirectToPage("login.html");
+    redirectToPage("login.html");
 }
 
 async function OnRegister(e) {
