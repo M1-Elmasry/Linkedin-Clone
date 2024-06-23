@@ -18,3 +18,4 @@ $router->post('user', 'User:Profile', ['id']);
 $router->post('post/add', 'Post:AddNewPost', ['position', 'company', 'location', 'salary', 'industry', 'description']);
 $router->post('post/comments', 'Post:GetComments', ['id']);
 $router->post('post/add/comment', 'Post:AddComment', ['post_id', 'content']);
+$router->post('post/apply', 'Post:Apply', ['post_id']);

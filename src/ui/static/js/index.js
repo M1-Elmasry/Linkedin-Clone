@@ -39,6 +39,9 @@ function ShowPost(post) {
     el.querySelector(".apply-btn").addEventListener('click', (e) => {
         OpenModal(post['id'])
     })
+    el.querySelector(".apply-btn").addEventListener('click', (e) => {
+        OpenModal(post['id'])
+    })
     el.querySelector(".details-btn").addEventListener('click', (e) => {
         toggleDetails(el)
     })
@@ -46,11 +49,13 @@ function ShowPost(post) {
         toggleComments(el)
         await ShowComments(post, el)
     })
+    var postId = post.id
     el.querySelector('#addCommentInput').addEventListener("keypress", async function(event) {
         if (event.key === "Enter") {
             event.preventDefault()
             const content = event.target.value
-            let comment = await SendComment(post, content)
+            console.log(postId);
+            let comment = await SendComment(post.id, content)
             AddComment(el.querySelector('.comments-section'), comment['data'])
         }
         })
@@ -59,12 +64,12 @@ function ShowPost(post) {
 async function OnAddNewPost(e) {
     e.preventDefault()
     
-    let post = await AddPost(e)
-    if(post['status'] == false) {
+    var res = await AddPost(e)
+    if(res['status'] == false) {
         console.log("error")
         return
     }
-    post = post.data
+    var post = res.data
     ShowPost(post)
     closeCreatePostPopup()
 }
@@ -108,10 +113,10 @@ function AddComment(commentsContainer, comment) {
     el.querySelector('.comment-time').innerHTML = comment['created_at']
     commentsContainer.appendChild(el);
 }
-async function SendComment(post, content) {
+async function SendComment(postId, content) {
     let formData = new FormData();
     formData.append('Authorization', `Bearer ${userToken}`)
-    formData.append('post_id', post.id)
+    formData.append('post_id', postId)
     formData.append('content', content)
     const response = await fetch(API + 'post/add/comment', {
         credentials: "same-origin",
@@ -130,9 +135,13 @@ function toggleComments(parent) {
     const commentsContainer = parent.querySelector('#comments-container');
     commentsContainer.style.display = commentsContainer.style.display === 'none' || commentsContainer.style.display === '' ? 'block' : 'none';
 }
-
+async function SubmitCurrentJobRequest() {
+    let res = await AddApply()
+    applyModal.querySelector('.msg').innerHTML = res['data']
+}
 function OpenModal(id) {
-applyModal.style.display = 'block';
+    selectedJob = id
+    applyModal.style.display = 'block';
 }
 
 function closeModal() {
@@ -145,6 +154,17 @@ if (event.target == applyModal) {
 }
 };
 // calls
+async function AddApply() {
+    let formData = new FormData();
+    formData.append('Authorization', `Bearer ${userToken}`)
+    formData.append('post_id', selectedJob)
+    const response = await fetch(API + 'post/apply', {
+        credentials: "same-origin",
+        method: "POST",
+        body: formData
+    })
+    return response.json()
+}
 async function GetFeed() {
     let formData = new FormData();
     formData.append('Authorization', `Bearer ${userToken}`)

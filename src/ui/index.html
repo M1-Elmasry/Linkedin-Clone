@@ -201,14 +201,10 @@
                           <p>Delete</p>
                         </div>
                       </div>
-                      <p class="comment-user-name">Ahmed Samir Fayed</p>
-                      <p class="comment-user-title">Hardware Engineer</p>
-                      <p class="comment-time">2d</p>
-                      <p class="comment-body">
-                        This point is understated: "Use Database Indexing and search
-                        engines for efficient data retrievals." 80% of the performance
-                        optimization can be done at this level!
-                      </p>
+                      <p class="comment-user-name"></p>
+                      <p class="comment-user-title"></p>
+                      <p class="comment-time"></p>
+                      <p class="comment-body"></p>
                     </div>
                   </div>
                   <!-- <div class="replies">
@@ -261,8 +257,9 @@
             <h2>Upload Resume</h2>
             <form id="applyForm">
               <input type="file" id="resume" name="resume" required />
-              <button type="submit">Submit Application</button>
+              <button type="submit" onclick="SubmitCurrentJobRequest(event)">Submit Application</button>
             </form>
+            <p class="msg"></p>
           </div>
         </div>
       </div>

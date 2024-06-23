@@ -1,13 +1,7 @@
 <?php
 
 namespace DB\Models;
-
-require('db/Database.php');
-
 use DB\Database as Database;
-
-require('utils/utils.php');
-
 use utils\Utils as Utils;
 
 class Applicant
