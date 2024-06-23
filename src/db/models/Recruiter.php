@@ -59,18 +59,18 @@ class Recruiter extends User
     }
 
     return new Recruiter(
-      $record['image'],
       $record['first_name'],
       $record['last_name'],
       $record['email'],
       $record['address'],
-      $record['phone'],
       $record['password'],
       $record['industry'],
+      false,
+      $record['image'],
+      $record['phone'],
       $record['title'],
       $record['current_company'],
       $record['about'],
-      false,
       $record["id"],
       $record["created_at"],
       $record["updated_at"]
