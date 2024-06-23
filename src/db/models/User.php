@@ -39,7 +39,7 @@ class User
     Utils::validateProperty("Lname", $this->Lname, 50, 2);
     Utils::validateProperty("email", $this->email, 50, 2);
     Utils::validateProperty("address", $this->address, 100, 2);
-    Utils::validateProperty("pswd", $this->pswd, 256, 6);
+    Utils::validateProperty("pswd", $this->pswd, 256, 1);
     Utils::validateProperty("phone", $this->phone, 25, 1);
     Utils::validateProperty("industry", $this->industry, 50, 1);
     Utils::validateProperty("title", $this->title, 50, 1);
@@ -53,7 +53,7 @@ class User
     $this->userId = Utils::generateUUID();
     $this->createdAt = $this->updatedAt = date("Y-m-d H:i:s");
 
-    $stmt = "INSERT INTO {$this->tableName} (id, image, first_name, last_name, email, address, phone, password, industry, current_company, title, about, is_recruiter, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = "INSERT INTO {$this->tableName} (id, image, first_name, last_name, email, address, phone, password, industry, current_company, title, about, is_recruiter, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $params = [
       $this->userId,

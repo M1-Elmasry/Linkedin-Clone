@@ -35,7 +35,7 @@ class UserController extends Authenticator
     return $this->response($token);
   }
 
-  public function Register($first_name, $last_name, $email, $password, $is_recruiter)
+  public function Register($first_name, $last_name, $address, $industry, $email, $password, $is_recruiter)
   {
     $validator = new Validator();
     $validator->ValidateText($first_name, 'First Name', ['required', 'min:3', 'max:50']);
@@ -53,8 +53,8 @@ class UserController extends Authenticator
     }
     
     // add record
-    $user = boolval($is_recruiter) ? new Recruiter($first_name, $last_name, $email, $password, true) 
-                          : new JobSeeker($first_name, $last_name, $email, $password, true);
+    $user = boolval($is_recruiter) ? new Recruiter($first_name, $last_name, $email, $address, $password, $industry, true) 
+                          : new JobSeeker($first_name, $last_name, $email, $address, $password, $industry, true);
     // return response
     return $this->response("Registered Successfully");
   }

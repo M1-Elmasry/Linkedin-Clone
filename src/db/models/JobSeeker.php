@@ -13,10 +13,10 @@ class JobSeeker extends User
     string $email,
     string $address,
     string $pswd,
+    string $industry,
     bool $is_new = false, // this for encapsulate obj without create new record in db
     string $imagePath = '-',
     string $phone = '-',
-    string $industry = '-',
     string $title = '-',
     string $currentCompany = '-',
     string $about = '-',

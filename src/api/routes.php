@@ -9,7 +9,7 @@ $router->get('test/{id}/{data}', 'Home:Test');
 
 // Auth routes
 $router->post('login', 'User:Login', ['email', 'password'])->only('Guest');
-$router->post('register', 'User:Register', ['first_name', 'last_name', 'email', 'password', 'is_recruiter'])->only('Guest');
+$router->post('register', 'User:Register', ['first_name', 'last_name', 'address', 'industry', 'email', 'password', 'is_recruiter'])->only('Guest');
 $router->post('logout', 'User:Logout')->only('Auth');
 $router->post('feed', 'User:Feed');
 $router->post('user', 'User:Profile', ['id']);

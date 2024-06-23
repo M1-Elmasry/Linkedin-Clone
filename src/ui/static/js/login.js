@@ -56,7 +56,9 @@ async function OnRegister(e) {
 
     let formData = new FormData(e.target);
     if(!formData.has("is_recruiter")) {
-        formData.append("is_recruiter", false);
+        formData.append("is_recruiter", 0)
+    } else {
+        formData.set("is_recruiter", 1)
     }
     const response = await fetch(API + 'register', {
         method: "POST",
@@ -69,5 +71,6 @@ async function OnRegister(e) {
         return
     }
 
-    redirectToPage("login.html");
+    //redirectToPage("login.html");
+    SwitchForms()
 }
