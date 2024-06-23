@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) UNIQUE NOT NULL,
-  `address` varchar(100) UNIQUE NOT NULL,
+  `address` varchar(100) NOT NULL,
   `phone` varchar(25),
   `password` varchar(256) NOT NULL,
   `industry` varchar(50) NOT NULL,

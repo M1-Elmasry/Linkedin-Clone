@@ -10,8 +10,8 @@ use \DB\Models\Applicant;
 class PostController extends Controller
 {
     public function AddNewPost($position, $company, $location, $salary, $industry, $description) {
-        $comment = new JobPost($_SESSION['userId'], '-', $position, $industry, $location, $salary, $description);
-        return $this->response($comment->getData());
+        $post = new JobPost($_SESSION['userId'], '-', $position, $industry, $location, $salary, $description);
+        return $this->response($post->getData());
     }
     public function Apply($post_id)
     {
