@@ -4,6 +4,7 @@ const profileMenu = document.getElementById("profileMenu")
 const navbar = document.getElementById("Navbar")
 const PostsList = document.getElementById("PostsList")
 const applyModal = document.getElementById('applyModal');
+const popup = document.getElementById("popup");
 const postTemplate = PostsList.children[0]
 const commentTemplate = postTemplate.querySelector('.comment')
 
@@ -13,12 +14,6 @@ var selectedJob = null
 PostsList.children[0].remove()
 postTemplate.querySelector('.comments-section').innerHTML = ''
 
-
-function SwitchForm () {
-    const form = document.getElementById("createPostForm")
-    form.style.display = form.style.display === "block" ? "none" : "block"
-}
-
 window.onload = async function() {
     if(!IsAuthenticated()) {
         redirectToPage('index', 'login')
@@ -26,9 +21,10 @@ window.onload = async function() {
     let feed = await GetFeed()
     feed = feed.data
     let posts = feed['posts']
-
-    for (let i = 0; i < posts.length; i++) {
-        ShowPost(posts[i])
+    if(posts != null) {
+        for (let i = 0; i < posts.length; i++) {
+            ShowPost(posts[i])
+        }
     }
 };
 function ShowPost(post) {
@@ -62,15 +58,15 @@ function ShowPost(post) {
 }
 async function OnAddNewPost(e) {
     e.preventDefault()
-    let formData = new FormData(e.target);
-    formData.append('Authorization', `Bearer ${userToken}`)
-    const response = await fetch(API + 'post/add', {
-        credentials: "same-origin",
-        method: "POST",
-        body: formData
-    })
-    let res = response.json()
-    console.log(res['data'])
+    
+    let post = await AddPost(e)
+    if(post['status'] == false) {
+        console.log("error")
+        return
+    }
+    post = post.data
+    ShowPost(post)
+    closeCreatePostPopup()
 }
 function toggleMenu() {
     var menu = document.getElementById("navbarMenu");
@@ -159,11 +155,15 @@ async function GetFeed() {
     })
     return response.json()
 }
-async function AddPost(form) {
-    
-}
-async function AddPost(form) {
-
+async function AddPost(e) {
+    let formData = new FormData(e.target);
+    formData.append('Authorization', `Bearer ${userToken}`)
+    const response = await fetch(API + 'post/add', {
+        credentials: "same-origin",
+        method: "POST",
+        body: formData
+    })
+    return response.json()
 }
 async function GetComments(post) {
     let formData = new FormData();
@@ -197,7 +197,6 @@ async function Logout() {
 
 document.addEventListener("DOMContentLoaded", () => {
     const openPopupBtn = document.getElementById("openPopup");
-    const popup = document.getElementById("popup");
     const closeBtn = document.querySelector(".close");
 
     openPopupBtn.addEventListener("click", () => {
@@ -205,12 +204,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     closeBtn.addEventListener("click", () => {
-      popup.style.display = "none";
+        closeCreatePostPopup()
     });
 
     window.addEventListener("click", (event) => {
       if (event.target === popup) {
-        popup.style.display = "none";
+        closeCreatePostPopup()
       }
     });
   });
+
+  function closeCreatePostPopup() {
+    popup.style.display = "none";
+  }
