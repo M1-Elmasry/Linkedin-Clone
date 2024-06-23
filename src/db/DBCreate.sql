@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `title` varchar(50),
   `about` text,
   `is_recruiter` boolean NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime
 );
 
 CREATE VIEW IF NOT EXISTS job_seekers AS
@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS `job_posts` (
   `author_id` varchar(250) NOT NULL,
   `salary` float NOT NULL,
   `description` text NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime,
   FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `reactions` (
   `react_name` varchar(20) NOT NULL,
   `post_id` varchar(250) NOT NULL,
   `author_id` varchar(250) NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` datetime NOT NULL,
   FOREIGN KEY (`post_id`) REFERENCES `job_posts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS `applicants` (
   `job_post_id` varchar(250) NOT NULL,
   `job_seeker_id` varchar(250) NOT NULL,
   `cover_letter` text,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime,
   FOREIGN KEY (`job_post_id`) REFERENCES `job_posts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`job_seeker_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `content` text NOT NULL,
   `post_id` varchar(250) NOT NULL,
   `author_id` varchar(250) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime,
   FOREIGN KEY (`post_id`) REFERENCES `job_posts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS `replies` (
   `content` text NOT NULL,
   `comment_id` varchar(250) NOT NULL,
   `author_id` varchar(250) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime,
   FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
@@ -95,8 +95,8 @@ CREATE TABLE IF NOT EXISTS `experiences` (
   `joining_date` date,
   `leaving_date` date,
   `author_id` varchar(250) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime,
   FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `skills` (
   `id` varchar(250) PRIMARY KEY,
   `user_id` varchar(250) NOT NULL,
   `skill` varchar(50) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
