@@ -28,5 +28,7 @@ The Database (Data Access Layer) is responsible for storing and managing all app
 - **Data Fetching**: Includes functions and methods for fetching, inserting, updating, and deleting data from the database.
 - **Relationships**: Appropriate relationships are established between different entities (e.g., users and job postings, job postings and applications) to maintain data integrity.
 
+![database design](./images/db-design.png)  
+
 ## Contributing
 Feel free to contribute to this project by submitting issues or pull requests.
